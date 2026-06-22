@@ -1,5 +1,7 @@
 # API de Média Escolar
 
+![CI](https://github.com/enzoblousa/RED_Ensino_Domiciliar/actions/workflows/ci.yml/badge.svg)
+
 ## Descrição
 API simples para cadastro de alunos, registro de duas notas e cálculo automático da média e da situação (Aprovado/Reprovado). Construída como atividade da disciplina Testes e Qualidade de Software, demonstrando Docker, testes automatizados e uma esteira CI/CD.
 

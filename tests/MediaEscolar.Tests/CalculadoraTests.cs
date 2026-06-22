@@ -15,7 +15,7 @@ public class CalculadoraTests
         var n2 = 6.0;
 
         //ACT
-        var media = Calculadora.CalcularMedia(n1,n2);
+        var media = Calculadora.CalcularMedia(n1, n2);
 
         //ASSERT
         Assert.Equal(7, media);

@@ -57,7 +57,6 @@ A esteira (`.github/workflows/ci.yml`) executa, a cada push/PR para `main`:
 ## Evidências
 - Execução da pipeline no GitHub Actions: https://github.com/enzoblousa/RED_Ensino_Domiciliar/actions/runs/27924637273
 - Log de testes passando localmente: ver `evidencias/correcao-teste.txt`
-- Screenshot da execução da pipeline: `evidencias/EvidenciaFalha1.png` (print da run do GitHub Actions)
 - Relatório do linter: `format-report.json`, gerado pelo `dotnet format --report` e publicado como artifact `evidencias-pipeline` em cada execução
 
 ## Falha simulada e correção

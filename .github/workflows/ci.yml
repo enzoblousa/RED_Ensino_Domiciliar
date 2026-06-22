@@ -31,7 +31,40 @@ jobs:
       - name: Executar testes com cobertura
         run: dotnet test MediaEscolar.sln --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage" --results-directory ./TestResults
 
-      - name: Publicar evidencias (relatorio do linter, resultados de teste e cobertura)
+      - name: Capturar screenshot da execução
+        run: |
+          docker run -d --name media-escolar -p 8080:8080 media-escolar
+
+          echo "Aguardando a API responder..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8080/alunos > /dev/null; then
+              echo "API respondendo."
+              break
+            fi
+            if [ "$i" -eq 30 ]; then
+              echo "API nao respondeu a tempo."
+              docker logs media-escolar
+              exit 1
+            fi
+            sleep 1
+          done
+
+          ALUNO_ID=$(curl -sf -X POST http://localhost:8080/alunos \
+            -H "Content-Type: application/json" \
+            -d '{"nome":"Maria"}' | jq -r '.id')
+
+          curl -sf -X POST "http://localhost:8080/alunos/${ALUNO_ID}/notas" \
+            -H "Content-Type: application/json" \
+            -d '{"nota1":8.0,"nota2":6.0}' > /dev/null
+
+          npx --yes playwright@1.48.0 install --with-deps chromium
+          npx --yes playwright@1.48.0 screenshot "http://localhost:8080/alunos/${ALUNO_ID}" ./TestResults/screenshot-execucao.png
+
+      - name: Encerrar container da aplicacao
+        if: always()
+        run: docker rm -f media-escolar || true
+
+      - name: Publicar evidencias (relatorio do linter, resultados de teste, cobertura e screenshot)
         if: always()
         uses: actions/upload-artifact@v4
         with:

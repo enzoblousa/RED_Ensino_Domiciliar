@@ -58,6 +58,6 @@ public class CalculadoraTests
     public void CalcularSituacao_RegressaoDaNotaDeCorteSeis()
     {
         Assert.Equal("Aprovado", Calculadora.CalcularSituacao(6.0));
-        Assert.Equal("Reprovado", Calculadora.CalcularSituacao(7.00));
+        Assert.Equal("Reprovado", Calculadora.CalcularSituacao(5.98));
     }
 }

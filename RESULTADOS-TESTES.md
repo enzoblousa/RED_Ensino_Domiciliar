@@ -26,7 +26,7 @@ dotnet test MediaEscolar.sln --logger "trx;LogFileName=test-results.trx" --colle
 **O que aparece dentro:**
 - `test-results.trx` — relatório dos testes (quantos passaram/falharam, tempo de execução, stack trace de falhas). Formato XML do Visual Studio Test Results.
 - `<guid>/coverage.cobertura.xml` — relatório de cobertura em formato Cobertura (dados brutos, não é para ler diretamente).
-- Na pipeline (CI), essa mesma pasta também recebe `format-report.json` (relatório do linter) e `screenshot-execucao.png` (ver seções abaixo).
+- Na pipeline (CI), essa mesma pasta também recebe `format-style/format-report.json` e `format-analyzers/format-report.json` (relatório do linter, um para cada categoria) e `screenshot-execucao.png` (ver seções abaixo).
 
 **Como visualizar:**
 - `.trx`: abra com o Visual Studio (`Test > Test Explorer > Open test results`) ou com a extensão "TRX Test Report" do VS Code. Também é só um XML, pode ser lido em qualquer editor de texto se for só para conferir os nomes dos testes e o resultado.
@@ -51,7 +51,7 @@ reportgenerator -reports:"TestResults/**/coverage.cobertura.xml" -targetdir:"cov
 A cada execução da pipeline (`.github/workflows/ci.yml`), o passo final publica um artifact chamado `evidencias-pipeline` com o conteúdo da pasta `TestResults/` daquela execução específica — ou seja, é a versão "oficial" e mais completa dos resultados, gerada sem intervenção manual.
 
 **Conteúdo do artifact:**
-- `format-report.json` — relatório da análise estática (`dotnet format --report`).
+- `format-style/format-report.json` e `format-analyzers/format-report.json` — relatórios da análise estática (`dotnet format style` e `dotnet format analyzers`, ambos com `--report`). A categoria `whitespace` foi removida do gate por ser excessivamente rígida sem um `.editorconfig` no repositório.
 - `test-results.trx` — relatório de testes daquela execução.
 - `coverage.cobertura.xml` — cobertura daquela execução.
 - `screenshot-execucao.png` — print automático (via Playwright headless) do JSON retornado pela API real, depois de exercitar o fluxo cadastro → notas → consulta contra a imagem Docker buildada na própria pipeline.

@@ -26,7 +26,9 @@ jobs:
         run: dotnet restore MediaEscolar.sln
 
       - name: Analise estatica (dotnet format)
-        run: dotnet format MediaEscolar.sln --verify-no-changes --report ./TestResults
+        run: |
+          dotnet format style MediaEscolar.sln --verify-no-changes --report ./TestResults/format-style
+          dotnet format analyzers MediaEscolar.sln --verify-no-changes --report ./TestResults/format-analyzers
 
       - name: Executar testes com cobertura
         run: dotnet test MediaEscolar.sln --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage" --results-directory ./TestResults

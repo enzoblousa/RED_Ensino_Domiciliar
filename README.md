@@ -47,7 +47,7 @@ A esteira (`.github/workflows/ci.yml`) executa, a cada push/PR para `main`:
 1. Checkout do código (`actions/checkout@v4`)
 2. Setup do .NET (`actions/setup-dotnet@v4`)
 3. Build da imagem Docker (`docker build`)
-4. Análise estática (`dotnet format --verify-no-changes --report ./TestResults`, gerando `format-report.json`)
+4. Análise estática (`dotnet format style` + `dotnet format analyzers`, ambos com `--verify-no-changes`; a categoria `whitespace` foi excluída do gate por ser excessivamente rígida sem `.editorconfig`), gerando `format-report.json` em `TestResults/format-style/` e `TestResults/format-analyzers/`
 5. Execução dos testes com cobertura (`dotnet test --collect:"XPlat Code Coverage"`)
 6. Captura automática de screenshot: sobe o container da imagem buildada, executa o fluxo cadastro → notas → consulta via `curl` e usa o Playwright (Chromium headless) para fotografar o JSON final em `screenshot-execucao.png`
 7. Publicação de evidências (relatório do linter, relatório de testes, cobertura e screenshot como artifacts)
@@ -59,7 +59,7 @@ A esteira (`.github/workflows/ci.yml`) executa, a cada push/PR para `main`:
 
 ## Evidências
 - Execução da pipeline no GitHub Actions: https://github.com/enzoblousa/RED_Ensino_Domiciliar/actions/runs/27924637273
-- Relatório do linter: `format-report.json`, gerado pelo `dotnet format --report` e publicado como artifact `evidencias-pipeline` em cada execução
+- Relatório do linter: `format-report.json` (em `format-style/` e `format-analyzers/`), gerado pelo `dotnet format --report` e publicado como artifact `evidencias-pipeline` em cada execução
 - Screenshot da execução: `screenshot-execucao.png`, gerado automaticamente em cada execução (sem intervenção manual) e publicado no artifact `evidencias-pipeline` — baixável na página da run correspondente em GitHub Actions
 
 ## Falha simulada e correção

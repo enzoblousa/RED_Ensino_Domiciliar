@@ -13,28 +13,34 @@ jobs:
     #checkout do código
       - name: Checkout
         uses: actions/checkout@v4
-
+    #Setup de todas dependencias do dotnet, nuget packages, runtimes, compiladores, versões etc.
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-
+    #builda a imagem que está no docker file
       - name: Build da imagem Docker
         run: docker build -t media-escolar .
-
+    #dotnet restore da solution raiz para restaurar as dependencias
       - name: Restaurar dependencias
         run: dotnet restore MediaEscolar.sln
-
+    #dotnet format apenas no style, e analyzers, o format padrão vinha com uma categoria a mais(whitespace, retirado pq tudo que eu mechia quebrava a pipeline)
       - name: Analise estatica (dotnet format)
         run: |
           dotnet format style MediaEscolar.sln --verify-no-changes --report ./TestResults/format-style
           dotnet format analyzers MediaEscolar.sln --verify-no-changes --report ./TestResults/format-analyzers
-
+    #realiza todos os testes unitários, integração e api e crie um registrador, nele coleta a cobertura de testes e expõe métricas e resultados em uma pasta /TestResults
       - name: Executar testes com cobertura
         run: dotnet test MediaEscolar.sln --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage" --results-directory ./TestResults
 
+
+    #USEI E ABUSEI DA IA 
+    #Lógica de criar screenshot automática e gurdar como artefato, se tudo passar dentro dos conformes, um endpoint é feito e printado, caso contrário é printado a stacktrace do erro
+
+        #parece que roda um contâiner da aplicacao e acessa os endpoints da api
       - name: Capturar screenshot da execução
         run: |
+          
           docker run -d --name media-escolar -p 8080:8080 media-escolar
 
           echo "Aguardando a API responder..."
